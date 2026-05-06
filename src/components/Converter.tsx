@@ -109,7 +109,7 @@ export default function Converter({ id, name, description }: ConverterProps) {
       case 'json-to-xml':
         return [{ label: 'Config', value: '{"api":{"version":"v1","retry":3,"endpoints":["/auth","/user","/posts"]},"server":{"port":8080,"host":"0.0.0.0"}}' }, { label: 'User List', value: '[{"id":1,"name":"Alice","role":"Admin"},{"id":2,"name":"Bob","role":"User"}]' }];
       case 'yaml-to-json':
-        return [{ label: 'App Config', value: 'app:\n  name: DevToolKit\n  version: 2.4.0\n  database:\n    type: postgres\n    pool: 20' }];
+        return [{ label: 'App Config', value: 'app:\n  name: DevToolKit\n  version: 1.0.0\n  database:\n    type: postgres\n    pool: 20' }];
       case 'csv-to-json':
       case 'csv-to-xml':
         return [{ label: 'Users', value: 'id,first_name,last_name,email\n1,John,Doe,john@example.com\n2,Jane,Smith,jane@example.com' }];

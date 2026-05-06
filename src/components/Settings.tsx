@@ -132,7 +132,7 @@ export default function Settings({ isOpen, onClose, theme, setTheme, density, se
 
             <div className="p-8 border-t border-slate-900 bg-slate-900/20">
               <div className="flex items-center justify-between text-[10px] font-mono text-slate-600 uppercase tracking-widest">
-                <span>Core Engine v2.4.0</span>
+                <span>Core Engine v1.0.0</span>
                 <span>ID: {Math.random().toString(36).substring(7).toUpperCase()}</span>
               </div>
             </div>

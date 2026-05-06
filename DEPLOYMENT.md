@@ -81,6 +81,34 @@ docker run -p 8080:80 devtoolkit
 
 ---
 
+## 5. cPanel Hosting (Shared Hosting)
+If you are using a standard cPanel account (like HostGator, Bluehost, etc.), follow these steps:
+
+1. **Build Locally**: Run `npm run build` on your computer.
+2. **Compress**: Go into the `dist/` folder, select all files, and add them to a `.zip` archive.
+3. **Upload**: 
+   - Open cPanel **File Manager**.
+   - Navigate to `public_html` (or your subdomain folder).
+   - Click **Upload** and select your zip file.
+4. **Extract**: Right-click the uploaded zip file and select **Extract**.
+5. **Fix Routing (Crucial)**: 
+   Because React uses client-side routing, you need to tell the Apache server to redirect all requests to `index.html`. 
+   - Create a file named `.htaccess` in the same folder where you extracted the files.
+   - Paste the following code:
+
+```apache
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+```
+
+---
+
 ## 🔐 Security Note
 Since DevToolKit processes everything locally in the browser, you don't need a backend database for the tools. However, for maximum privacy, we recommend:
 - **Enabling HTTPS** (via SSL certificates like Let's Encrypt).

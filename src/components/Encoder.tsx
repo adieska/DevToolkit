@@ -20,9 +20,9 @@ export default function Encoder({ id, name, description }: EncoderProps) {
   const getPresets = () => {
     switch (id) {
       case 'base64-encode':
-        return [{ label: 'Hello', value: 'Hello DevToolKit!' }, { label: 'JSON', value: '{"id":123,"version":"2.4.0"}' }];
+        return [{ label: 'Hello', value: 'Hello DevToolKit!' }, { label: 'JSON', value: '{"id":123,"version":"1.0.0"}' }];
       case 'base64-decode':
-        return [{ label: 'Hello', value: 'SGVsbG8gRGV2VG9vbEtpdCE=' }, { label: 'JSON', value: 'eyJpZCI6MTIzLCJ2ZXJzaW9uIjoiMi40LjAifQ==' }];
+        return [{ label: 'Hello', value: 'SGVsbG8gRGV2VG9vbEtpdCE=' }, { label: 'JSON', value: 'eyJpZCI6MTIzLCJ2ZXJzaW9uIjoiMS4wLjAifQ==' }];
       case 'url-encode':
       case 'url-parse':
         return [{ label: 'Complex URL', value: 'https://ais-dev-example.run.app/search?query=react hooks&page=1&sort=desc#results' }];

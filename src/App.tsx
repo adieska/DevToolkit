@@ -190,7 +190,7 @@ export default function App() {
           <div className="flex items-center gap-3">
             <div className="hidden lg:flex items-center gap-4 mr-4 text-right">
               <div>
-                <p className="text-xs font-bold text-white leading-none">v2.4.0</p>
+                <p className="text-xs font-bold text-white leading-none">v1.0.0</p>
                 <p className="text-[9px] text-emerald-400 font-medium mt-1">System Stable</p>
               </div>
               <div className="w-8 h-8 rounded-full border border-slate-800 bg-slate-900 flex items-center justify-center">

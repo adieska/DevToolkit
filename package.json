@@ -1,7 +1,8 @@
 {
-  "name": "react-example",
+  "name": "devtoolkit",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Professional-grade developer workstation with 300+ tools for formatting, encoding, generation, and networking.",
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
