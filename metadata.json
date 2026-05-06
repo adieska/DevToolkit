@@ -1,0 +1,6 @@
+{
+  "name": "DevToolKit",
+  "description": "DevToolKit: A professional-grade, privacy-first workstation with 300+ tools for developers. Includes advanced formatters, encoders, generators (QR, YouTube, Regex), and networking utilities—all processed locally.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

@@ -1,11 +1,56 @@
-<div align="center">
+# DevToolKit 🛠️
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+**DevToolKit** is a high-performance, professional-grade workstation for developers, featuring over 300 essential tools for day-to-day coding tasks. From cryptography and encoding to image processing and networking, everything is processed locally in your browser for maximum privacy and speed.
 
-  <h1>Built with AI Studio</h2>
+![DevToolKit Preview](https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&q=80&w=1200)
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+## ✨ Features
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+- **300+ Specialized Tools**: Formatter, Encoders, Converters, Generators, and more.
+- **Privacy First**: All data processing happens on the client-side. No server uploads.
+- **Professional Workstation UI**:
+  - **Theming**: Deep Slate, Midnight Indigo, and Carbon Black.
+  - **Layout Density**: Relaxed and Compact modes for different screen sizes.
+- **Smart Search**: Find tools instantly with keyboard-friendly navigation.
+- **Real-time Feedback**: Live preview for QR codes, JWT decoding, and math calculations.
 
-</div>
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn
+
+### Installation
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/devtoolkit.git
+
+# Navigate to the project
+cd devtoolkit
+
+# Install dependencies
+npm install
+```
+
+### Development
+```bash
+npm run dev
+```
+The app will be available at `http://localhost:3000`.
+
+## 🛠️ Built With
+
+- **React 18** - UI Logic
+- **Vite** - Build System
+- **Tailwind CSS** - Styling
+- **Lucide React** - Iconography
+- **Motion (framer-motion)** - Fluid Animations
+- **TypeScript** - Type Safety
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
