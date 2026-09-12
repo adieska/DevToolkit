@@ -1,5 +1,7 @@
 # DevToolKit 🛠️
 
+[![CI](https://github.com/adieska/DevToolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/adieska/DevToolkit/actions/workflows/ci.yml)
+
 **DevToolKit** is a high-performance, professional-grade workstation for developers, featuring over 300 essential tools for day-to-day coding tasks. From cryptography and encoding to image processing and networking, everything is processed locally in your browser for maximum privacy and speed.
 
 ![DevToolKit Preview](https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&q=80&w=1200)
