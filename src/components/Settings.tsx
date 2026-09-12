@@ -28,6 +28,9 @@ export default function Settings({ isOpen, onClose, theme, setTheme, density, se
             className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[100]"
           />
           <motion.div 
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="settings-title"
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
@@ -36,10 +39,11 @@ export default function Settings({ isOpen, onClose, theme, setTheme, density, se
           >
             <div className={`p-8 border-b flex items-center justify-between ${theme === 'midnight' ? 'border-indigo-900/30' : 'border-slate-900'}`}>
               <div>
-                <h2 className="text-2xl font-black text-white tracking-tight italic">PREFERENCES</h2>
+                <h2 id="settings-title" className="text-2xl font-black text-white tracking-tight italic">PREFERENCES</h2>
                 <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mt-1">Application Configuration</p>
               </div>
               <button 
+                aria-label="Close Settings"
                 onClick={onClose}
                 className="p-3 hover:bg-slate-900 rounded-2xl text-slate-400 hover:text-white transition-all active:scale-95 border border-transparent hover:border-slate-800"
               >

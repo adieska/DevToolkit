@@ -365,7 +365,7 @@ export default function App() {
         </header>
 
         {isMobileSearchOpen && (
-          <div className="absolute left-0 right-0 top-20 z-30 border-b border-slate-800 bg-slate-950/95 p-4 backdrop-blur-md md:hidden">
+          <div role="search" aria-label="Mobile tool search" className="absolute left-0 right-0 top-20 z-30 border-b border-slate-800 bg-slate-950/95 p-4 backdrop-blur-md md:hidden">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <input

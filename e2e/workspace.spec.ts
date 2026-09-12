@@ -101,9 +101,10 @@ test('exports and imports a workspace backup', async ({ page }) => {
 
 test('closes Settings with Escape', async ({ page }) => {
   await page.getByTitle('Settings').click();
-  await expect(page.getByRole('heading', { name: 'PREFERENCES' })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'PREFERENCES' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Close Settings' })).toBeVisible();
   await page.keyboard.press('Escape');
-  await expect(page.getByRole('heading', { name: 'PREFERENCES' })).toBeHidden();
+  await expect(page.getByRole('dialog', { name: 'PREFERENCES' })).toBeHidden();
 });
 
 test('has no critical or serious accessibility violations', async ({ page }) => {
