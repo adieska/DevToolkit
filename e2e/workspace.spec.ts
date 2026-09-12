@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
@@ -41,4 +42,13 @@ test('renders the main workflow on a mobile viewport', async ({ page }) => {
 
   await page.locator('h3', { hasText: 'JSON Prettify' }).click();
   await expect(page.getByRole('heading', { name: 'JSON Prettify' })).toBeVisible();
+});
+
+test('has no critical or serious accessibility violations', async ({ page }) => {
+  const results = await new AxeBuilder({ page }).analyze();
+  const blockingViolations = results.violations.filter(violation =>
+    violation.impact === 'critical' || violation.impact === 'serious'
+  );
+
+  expect(blockingViolations).toEqual([]);
 });

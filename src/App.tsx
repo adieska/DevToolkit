@@ -122,13 +122,13 @@ export default function App() {
               <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-white text-xl shadow-lg shadow-indigo-500/20">D</div>
               <div>
                 <h1 className="text-lg font-bold tracking-tight text-white leading-tight">DevToolKit</h1>
-                <p className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">Essential Dev Tools</p>
+                <p className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">Essential Dev Tools</p>
               </div>
             </div>
 
             <nav className="flex-1 p-4 overflow-y-auto space-y-8 mt-4 scrollbar-none">
               <div className="space-y-1">
-                <h2 className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Navigation</h2>
+                <h2 className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Navigation</h2>
                 <button 
                   onClick={() => { setCurrentPage('tools'); setActiveCategory('All'); setSelectedTool(null); }}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${currentPage === 'tools' && activeCategory === 'All' && !selectedTool ? 'bg-slate-900 text-indigo-400 border border-slate-800' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'}`}
@@ -146,7 +146,7 @@ export default function App() {
               </div>
 
               <div className="space-y-1">
-                <h2 className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Categories</h2>
+                <h2 className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Categories</h2>
                 {CATEGORIES.map(cat => (
                   <button 
                     key={cat}
@@ -160,7 +160,7 @@ export default function App() {
               </div>
 
               <div className="space-y-1">
-                <h2 className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Pinned Tools</h2>
+                <h2 className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Pinned Tools</h2>
                 {favoriteIds.length === 0 && (
                   <p className="px-3 text-xs text-slate-600">No favorites yet</p>
                 )}
@@ -168,7 +168,7 @@ export default function App() {
                   <button 
                     key={tool.id}
                     onClick={() => { setCurrentPage('tools'); openTool(tool); }}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all ${currentPage === 'tools' && selectedTool?.id === tool.id ? 'bg-slate-900 text-white border border-slate-800' : 'text-slate-500 hover:text-slate-300 hover:bg-slate-900/50'}`}
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all ${currentPage === 'tools' && selectedTool?.id === tool.id ? 'bg-slate-900 text-white border border-slate-800' : 'text-slate-400 hover:text-slate-300 hover:bg-slate-900/50'}`}
                   >
                     <tool.icon className={`w-4 h-4 ${currentPage === 'tools' && selectedTool?.id === tool.id ? 'text-indigo-400' : ''}`} />
                     {tool.name}
@@ -177,7 +177,7 @@ export default function App() {
               </div>
 
               <div className="space-y-1">
-                <h2 className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Recent Tools</h2>
+                <h2 className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Recent Tools</h2>
                 {recentToolIds.length === 0 && (
                   <p className="px-3 text-xs text-slate-600">No recent tools</p>
                 )}
@@ -185,7 +185,7 @@ export default function App() {
                   <button
                     key={tool.id}
                     onClick={() => { setCurrentPage('tools'); openTool(tool); }}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all ${selectedTool?.id === tool.id ? 'bg-slate-900 text-white border border-slate-800' : 'text-slate-500 hover:text-slate-300 hover:bg-slate-900/50'}`}
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all ${selectedTool?.id === tool.id ? 'bg-slate-900 text-white border border-slate-800' : 'text-slate-400 hover:text-slate-300 hover:bg-slate-900/50'}`}
                   >
                     <Clock className="w-4 h-4" />
                     <span className="truncate">{tool.name}</span>
@@ -215,6 +215,7 @@ export default function App() {
         <header className={`h-20 border-b backdrop-blur-md px-6 md:px-10 flex items-center justify-between sticky top-0 z-40 transition-colors duration-300 ${theme === 'midnight' ? 'bg-[#0a0c10]/80 border-indigo-900/30' : theme === 'carbon' ? 'bg-black/80 border-slate-900' : 'bg-slate-950/80 border-slate-900'}`}>
           <div className="flex items-center gap-4 flex-1">
             <button 
+              aria-label={isSidebarOpen ? 'Close sidebar' : 'Open sidebar'}
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className="p-2 hover:bg-slate-900 rounded-xl text-slate-400 transition-colors"
             >
@@ -282,7 +283,7 @@ export default function App() {
         </div>
 
         {/* Footer Status */}
-        <footer className={`h-10 border-t px-6 flex items-center justify-between text-[10px] font-mono text-slate-500 uppercase tracking-widest transition-colors duration-300 ${theme === 'midnight' ? 'bg-[#0a0c10] border-indigo-900/30' : theme === 'carbon' ? 'bg-black border-slate-900' : 'bg-slate-950 border-slate-900'}`}>
+        <footer className={`h-10 border-t px-6 flex items-center justify-between text-[10px] font-mono text-slate-400 uppercase tracking-widest transition-colors duration-300 ${theme === 'midnight' ? 'bg-[#0a0c10] border-indigo-900/30' : theme === 'carbon' ? 'bg-black border-slate-900' : 'bg-slate-950 border-slate-900'}`}>
             <div className="flex gap-6">
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
@@ -354,7 +355,7 @@ function HomeDashboard({ tools, activeCategory, onSelect, searchQuery, onNavigat
              <div className="w-2 h-8 bg-indigo-500 rounded-full"></div>
              {activeCategory === 'All' ? 'Latest Discoveries' : activeCategory}
           </h2>
-          <p className="text-sm font-medium text-slate-500">{tools.length} Tools Available</p>
+          <p className="text-sm font-medium text-slate-400">{tools.length} Tools Available</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -384,9 +385,9 @@ function HomeDashboard({ tools, activeCategory, onSelect, searchQuery, onNavigat
                 </div>
               </div>
               <h3 className="text-lg font-bold text-white mb-2 group-hover:text-indigo-400 transition-colors">{tool.name}</h3>
-              <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">{tool.description}</p>
+              <p className="text-xs text-slate-400 leading-relaxed line-clamp-2">{tool.description}</p>
               <div className="mt-8 pt-6 border-t border-slate-800 flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{tool.category}</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{tool.category}</span>
                 <span className="text-[9px] text-slate-700 font-mono">v1.2.0</span>
               </div>
             </motion.div>
