@@ -44,6 +44,15 @@ npm run dev
 ```
 The app will be available at `http://localhost:3000`.
 
+### Testing
+```bash
+npm test
+npm run lint
+npm run build
+```
+
+The test suite covers workspace persistence helpers, favorite tools, and recent tool history.
+
 ## 🛠️ Built With
 
 - **React 19** - UI Logic

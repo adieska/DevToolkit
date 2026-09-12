@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { TOOLS, CATEGORIES, Tool, ToolCategory } from './types';
+import { addRecentToolId, readStored, STORAGE_KEYS, toggleFavoriteId } from './utils/workspace';
 
 // Components
 const Formatter = lazy(() => import('./components/Formatter'));
@@ -32,22 +33,6 @@ const MathTool = lazy(() => import('./components/MathTool'));
 const Blog = lazy(() => import('./components/Blog'));
 const Settings = lazy(() => import('./components/Settings'));
 
-const STORAGE_KEYS = {
-  favorites: 'devtoolkit:favorites',
-  recentTools: 'devtoolkit:recent-tools',
-  theme: 'devtoolkit:theme',
-  density: 'devtoolkit:density'
-} as const;
-
-function readStored<T>(key: string, fallback: T): T {
-  try {
-    const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) as T : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
 export default function App() {
   const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
   const [currentPage, setCurrentPage] = useState<'tools' | 'blog'>('tools');
@@ -55,10 +40,10 @@ export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeCategory, setActiveCategory] = useState<ToolCategory | 'All'>('All');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [theme, setTheme] = useState<'dark' | 'midnight' | 'carbon'>(() => readStored(STORAGE_KEYS.theme, 'dark'));
-  const [density, setDensity] = useState<'relaxed' | 'compact'>(() => readStored(STORAGE_KEYS.density, 'relaxed'));
-  const [favoriteIds, setFavoriteIds] = useState<string[]>(() => readStored(STORAGE_KEYS.favorites, []));
-  const [recentToolIds, setRecentToolIds] = useState<string[]>(() => readStored(STORAGE_KEYS.recentTools, []));
+  const [theme, setTheme] = useState<'dark' | 'midnight' | 'carbon'>(() => readStored(STORAGE_KEYS.theme, 'dark', localStorage));
+  const [density, setDensity] = useState<'relaxed' | 'compact'>(() => readStored(STORAGE_KEYS.density, 'relaxed', localStorage));
+  const [favoriteIds, setFavoriteIds] = useState<string[]>(() => readStored(STORAGE_KEYS.favorites, [], localStorage));
+  const [recentToolIds, setRecentToolIds] = useState<string[]>(() => readStored(STORAGE_KEYS.recentTools, [], localStorage));
 
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.theme, JSON.stringify(theme)); }, [theme]);
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.density, JSON.stringify(density)); }, [density]);
@@ -67,13 +52,11 @@ export default function App() {
 
   const openTool = (tool: Tool) => {
     setSelectedTool(tool);
-    setRecentToolIds(current => [tool.id, ...current.filter(id => id !== tool.id)].slice(0, 8));
+    setRecentToolIds(current => addRecentToolId(current, tool.id));
   };
 
   const toggleFavorite = (toolId: string) => {
-    setFavoriteIds(current => current.includes(toolId)
-      ? current.filter(id => id !== toolId)
-      : [...current, toolId]);
+    setFavoriteIds(current => toggleFavoriteId(current, toolId));
   };
 
   const resetPreferences = () => {
