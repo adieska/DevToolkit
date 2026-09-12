@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
   Search, 
   Menu, 
@@ -32,6 +32,22 @@ import MathTool from './components/MathTool';
 import Blog from './components/Blog';
 import Settings from './components/Settings';
 
+const STORAGE_KEYS = {
+  favorites: 'devtoolkit:favorites',
+  recentTools: 'devtoolkit:recent-tools',
+  theme: 'devtoolkit:theme',
+  density: 'devtoolkit:density'
+} as const;
+
+function readStored<T>(key: string, fallback: T): T {
+  try {
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) as T : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 export default function App() {
   const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
   const [currentPage, setCurrentPage] = useState<'tools' | 'blog'>('tools');
@@ -39,8 +55,34 @@ export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeCategory, setActiveCategory] = useState<ToolCategory | 'All'>('All');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [theme, setTheme] = useState<'dark' | 'midnight' | 'carbon'>('dark');
-  const [density, setDensity] = useState<'relaxed' | 'compact'>('relaxed');
+  const [theme, setTheme] = useState<'dark' | 'midnight' | 'carbon'>(() => readStored(STORAGE_KEYS.theme, 'dark'));
+  const [density, setDensity] = useState<'relaxed' | 'compact'>(() => readStored(STORAGE_KEYS.density, 'relaxed'));
+  const [favoriteIds, setFavoriteIds] = useState<string[]>(() => readStored(STORAGE_KEYS.favorites, []));
+  const [recentToolIds, setRecentToolIds] = useState<string[]>(() => readStored(STORAGE_KEYS.recentTools, []));
+
+  useEffect(() => { localStorage.setItem(STORAGE_KEYS.theme, JSON.stringify(theme)); }, [theme]);
+  useEffect(() => { localStorage.setItem(STORAGE_KEYS.density, JSON.stringify(density)); }, [density]);
+  useEffect(() => { localStorage.setItem(STORAGE_KEYS.favorites, JSON.stringify(favoriteIds)); }, [favoriteIds]);
+  useEffect(() => { localStorage.setItem(STORAGE_KEYS.recentTools, JSON.stringify(recentToolIds)); }, [recentToolIds]);
+
+  const openTool = (tool: Tool) => {
+    setSelectedTool(tool);
+    setRecentToolIds(current => [tool.id, ...current.filter(id => id !== tool.id)].slice(0, 8));
+  };
+
+  const toggleFavorite = (toolId: string) => {
+    setFavoriteIds(current => current.includes(toolId)
+      ? current.filter(id => id !== toolId)
+      : [...current, toolId]);
+  };
+
+  const resetPreferences = () => {
+    localStorage.clear();
+    setTheme('dark');
+    setDensity('relaxed');
+    setFavoriteIds([]);
+    setRecentToolIds([]);
+  };
 
   const themeClasses = {
     dark: 'bg-slate-950 text-slate-200',
@@ -57,7 +99,7 @@ export default function App() {
 
   const renderContent = () => {
     if (currentPage === 'blog') return <Blog />;
-    if (!selectedTool) return <HomeDashboard tools={filteredTools} activeCategory={activeCategory} onSelect={setSelectedTool} searchQuery={searchQuery} onNavigate={setCurrentPage} />;
+    if (!selectedTool) return <HomeDashboard tools={filteredTools} activeCategory={activeCategory} onSelect={openTool} searchQuery={searchQuery} onNavigate={setCurrentPage} favoriteIds={favoriteIds} onToggleFavorite={toggleFavorite} />;
 
     const category = selectedTool.category;
     if (category === 'Formatters') return <Formatter {...selectedTool} />;
@@ -136,14 +178,34 @@ export default function App() {
 
               <div className="space-y-1">
                 <h2 className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Pinned Tools</h2>
-                {TOOLS.slice(0, 4).map(tool => (
+                {favoriteIds.length === 0 && (
+                  <p className="px-3 text-xs text-slate-600">No favorites yet</p>
+                )}
+                {favoriteIds.map(id => TOOLS.find(tool => tool.id === id)).filter((tool): tool is Tool => Boolean(tool)).map(tool => (
                   <button 
                     key={tool.id}
-                    onClick={() => { setCurrentPage('tools'); setSelectedTool(tool); }}
+                    onClick={() => { setCurrentPage('tools'); openTool(tool); }}
                     className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all ${currentPage === 'tools' && selectedTool?.id === tool.id ? 'bg-slate-900 text-white border border-slate-800' : 'text-slate-500 hover:text-slate-300 hover:bg-slate-900/50'}`}
                   >
                     <tool.icon className={`w-4 h-4 ${currentPage === 'tools' && selectedTool?.id === tool.id ? 'text-indigo-400' : ''}`} />
                     {tool.name}
+                  </button>
+                ))}
+              </div>
+
+              <div className="space-y-1">
+                <h2 className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Recent Tools</h2>
+                {recentToolIds.length === 0 && (
+                  <p className="px-3 text-xs text-slate-600">No recent tools</p>
+                )}
+                {recentToolIds.map(id => TOOLS.find(tool => tool.id === id)).filter((tool): tool is Tool => Boolean(tool)).map(tool => (
+                  <button
+                    key={tool.id}
+                    onClick={() => { setCurrentPage('tools'); openTool(tool); }}
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all ${selectedTool?.id === tool.id ? 'bg-slate-900 text-white border border-slate-800' : 'text-slate-500 hover:text-slate-300 hover:bg-slate-900/50'}`}
+                  >
+                    <Clock className="w-4 h-4" />
+                    <span className="truncate">{tool.name}</span>
                   </button>
                 ))}
               </div>
@@ -200,7 +262,11 @@ export default function App() {
             <button 
               title="Favorites"
               className="p-2.5 hover:bg-slate-900 rounded-xl text-slate-400 hover:text-amber-400 transition-all border border-slate-900 active:scale-95"
-              onClick={() => alert('Favorites feature coming soon! Mark tools to see them here.')}
+              onClick={() => {
+                setCurrentPage('tools');
+                setSelectedTool(null);
+                setActiveCategory('All');
+              }}
             >
               <Star className="w-4 h-4" />
             </button>
@@ -255,12 +321,13 @@ export default function App() {
         setTheme={setTheme}
         density={density}
         setDensity={setDensity}
+        onReset={resetPreferences}
       />
     </div>
   );
 }
 
-function HomeDashboard({ tools, activeCategory, onSelect, searchQuery, onNavigate }: { tools: Tool[], activeCategory: string, onSelect: (tool: Tool) => void, searchQuery: string, onNavigate: (page: 'tools' | 'blog') => void }) {
+function HomeDashboard({ tools, activeCategory, onSelect, searchQuery, onNavigate, favoriteIds, onToggleFavorite }: { tools: Tool[], activeCategory: string, onSelect: (tool: Tool) => void, searchQuery: string, onNavigate: (page: 'tools' | 'blog') => void, favoriteIds: string[], onToggleFavorite: (toolId: string) => void }) {
   return (
     <div className="max-w-7xl mx-auto space-y-10 text-left">
       {/* Hero Section */}
@@ -277,7 +344,7 @@ function HomeDashboard({ tools, activeCategory, onSelect, searchQuery, onNavigat
             </h1>
           </div>
           <div className="relative z-10 flex flex-wrap gap-3 mt-8">
-            <button className="px-6 py-2.5 bg-white text-indigo-600 rounded-xl font-bold text-sm shadow-xl shadow-indigo-900/20 hover:scale-105 transition-transform" onClick={() => onSelect(tools[0])}>Get Started</button>
+            <button className="px-6 py-2.5 bg-white text-indigo-600 rounded-xl font-bold text-sm shadow-xl shadow-indigo-900/20 hover:scale-105 transition-transform" onClick={() => tools[0] && onSelect(tools[0])}>Get Started</button>
             <button className="px-6 py-2.5 bg-indigo-500 text-white rounded-xl font-bold text-sm border border-indigo-400 hover:bg-indigo-400 transition-all" onClick={() => onNavigate('blog')}>Browse Journal</button>
           </div>
         </div>
@@ -320,7 +387,16 @@ function HomeDashboard({ tools, activeCategory, onSelect, searchQuery, onNavigat
                 <div className={`p-4 rounded-2xl transition-colors ${idx % 3 === 0 ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' : idx % 3 === 1 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-orange-500/10 text-orange-400 border border-orange-500/20'}`}>
                   <tool.icon className="w-6 h-6" />
                 </div>
-                <ArrowUpRight className="w-5 h-5 text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="flex items-center gap-2">
+                  <button
+                    title={favoriteIds.includes(tool.id) ? 'Remove from favorites' : 'Add to favorites'}
+                    onClick={(event) => { event.stopPropagation(); onToggleFavorite(tool.id); }}
+                    className={`p-1.5 rounded-lg transition-colors ${favoriteIds.includes(tool.id) ? 'text-amber-400 bg-amber-400/10' : 'text-slate-600 opacity-0 group-hover:opacity-100 hover:text-amber-400'}`}
+                  >
+                    <Star className="w-4 h-4" fill={favoriteIds.includes(tool.id) ? 'currentColor' : 'none'} />
+                  </button>
+                  <ArrowUpRight className="w-5 h-5 text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
               </div>
               <h3 className="text-lg font-bold text-white mb-2 group-hover:text-indigo-400 transition-colors">{tool.name}</h3>
               <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">{tool.description}</p>

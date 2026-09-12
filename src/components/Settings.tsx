@@ -8,9 +8,10 @@ export interface SettingsProps {
   setTheme: (theme: 'dark' | 'midnight' | 'carbon') => void;
   density: 'relaxed' | 'compact';
   setDensity: (density: 'relaxed' | 'compact') => void;
+  onReset: () => void;
 }
 
-export default function Settings({ isOpen, onClose, theme, setTheme, density, setDensity }: SettingsProps) {
+export default function Settings({ isOpen, onClose, theme, setTheme, density, setDensity, onReset }: SettingsProps) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -117,7 +118,7 @@ export default function Settings({ isOpen, onClose, theme, setTheme, density, se
                   <div className="pt-4 border-t border-slate-800">
                     <button 
                       onClick={() => {
-                        localStorage.clear();
+                        onReset();
                         alert('Application cache cleared and reset to factory defaults.');
                       }}
                       className="w-full flex items-center justify-center gap-2 py-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-xl text-xs font-bold transition-all active:scale-95"
