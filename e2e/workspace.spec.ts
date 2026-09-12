@@ -44,6 +44,19 @@ test('renders the main workflow on a mobile viewport', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'JSON Prettify' })).toBeVisible();
 });
 
+test('focuses search with keyboard shortcuts', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'Search input is intentionally hidden on mobile layouts');
+  await expect(page.getByRole('heading', { name: /Essential Tools for Modern Developers/ })).toBeVisible();
+  const search = page.getByRole('textbox', { name: 'Search developer tools' });
+
+  await page.keyboard.press('Control+k');
+  await expect(search).toBeFocused();
+
+  await page.keyboard.press('Escape');
+  await page.keyboard.press('/');
+  await expect(search).toBeFocused();
+});
+
 test('has no critical or serious accessibility violations', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /Essential Tools for Modern Developers/ })).toBeVisible();
   const results = await new AxeBuilder({ page }).analyze();

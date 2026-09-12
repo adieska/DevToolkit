@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { 
   Search, 
   Menu, 
@@ -44,11 +44,28 @@ export default function App() {
   const [density, setDensity] = useState<'relaxed' | 'compact'>(() => readStored(STORAGE_KEYS.density, 'relaxed', localStorage));
   const [favoriteIds, setFavoriteIds] = useState<string[]>(() => readStored(STORAGE_KEYS.favorites, [], localStorage));
   const [recentToolIds, setRecentToolIds] = useState<string[]>(() => readStored(STORAGE_KEYS.recentTools, [], localStorage));
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.theme, JSON.stringify(theme)); }, [theme]);
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.density, JSON.stringify(density)); }, [density]);
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.favorites, JSON.stringify(favoriteIds)); }, [favoriteIds]);
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.recentTools, JSON.stringify(recentToolIds)); }, [recentToolIds]);
+  useEffect(() => {
+    const handleShortcut = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const isTyping = target?.matches('input, textarea, [contenteditable="true"]');
+      const isSearchShortcut = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k';
+      const isSlashShortcut = event.key === '/' && !isTyping;
+
+      if (isSearchShortcut || isSlashShortcut) {
+        event.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleShortcut);
+    return () => window.removeEventListener('keydown', handleShortcut);
+  }, []);
 
   const openTool = (tool: Tool) => {
     setSelectedTool(tool);
@@ -224,7 +241,9 @@ export default function App() {
             <div className="relative max-w-xl w-full hidden md:block">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <input 
+                ref={searchInputRef}
                 type="text"
+                aria-label="Search developer tools"
                 placeholder="Search essential developer tools..."
                 className="w-full bg-slate-900 border border-slate-800 text-slate-300 rounded-2xl py-2.5 pl-12 pr-4 text-sm focus:bg-slate-900/50 focus:ring-2 focus:ring-indigo-500 transition-all outline-none"
                 value={searchQuery}
