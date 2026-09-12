@@ -54,6 +54,8 @@ npm run build
 
 The test suite covers workspace persistence helpers, favorite tools, recent tool history, lazy-loaded tools, the main browser workflow, mobile rendering, and critical accessibility violations.
 
+Every push to `main` and pull request is validated by GitHub Actions with the same unit test, browser test, typecheck, and production build commands.
+
 ## 🛠️ Built With
 
 - **React 19** - UI Logic

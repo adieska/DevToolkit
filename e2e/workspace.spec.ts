@@ -45,6 +45,7 @@ test('renders the main workflow on a mobile viewport', async ({ page }) => {
 });
 
 test('has no critical or serious accessibility violations', async ({ page }) => {
+  await expect(page.getByRole('heading', { name: /Essential Tools for Modern Developers/ })).toBeVisible();
   const results = await new AxeBuilder({ page }).analyze();
   const blockingViolations = results.violations.filter(violation =>
     violation.impact === 'critical' || violation.impact === 'serious'
