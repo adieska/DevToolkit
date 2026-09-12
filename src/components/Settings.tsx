@@ -1,4 +1,5 @@
-import { X, Moon, Sun, Monitor, Layout, Shield, Trash2, Check, Smartphone, Maximize, Zap } from 'lucide-react';
+import { useRef } from 'react';
+import { X, Moon, Layout, Shield, Trash2, Check, Maximize, Zap, Download, Upload } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export interface SettingsProps {
@@ -9,9 +10,12 @@ export interface SettingsProps {
   density: 'relaxed' | 'compact';
   setDensity: (density: 'relaxed' | 'compact') => void;
   onReset: () => void;
+  onExport: () => void;
+  onImport: (file: File) => Promise<void>;
 }
 
-export default function Settings({ isOpen, onClose, theme, setTheme, density, setDensity, onReset }: SettingsProps) {
+export default function Settings({ isOpen, onClose, theme, setTheme, density, setDensity, onReset, onExport, onImport }: SettingsProps) {
+  const importInputRef = useRef<HTMLInputElement>(null);
   return (
     <AnimatePresence>
       {isOpen && (
@@ -116,6 +120,33 @@ export default function Settings({ isOpen, onClose, theme, setTheme, density, se
                   </div>
                   
                   <div className="pt-4 border-t border-slate-800">
+                    <div className="grid grid-cols-2 gap-3 mb-3">
+                      <button
+                        onClick={onExport}
+                        className="flex items-center justify-center gap-2 py-3 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/20 rounded-xl text-xs font-bold transition-all active:scale-95"
+                      >
+                        <Download className="w-4 h-4" />
+                        Export Workspace
+                      </button>
+                      <button
+                        onClick={() => importInputRef.current?.click()}
+                        className="flex items-center justify-center gap-2 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl text-xs font-bold transition-all active:scale-95"
+                      >
+                        <Upload className="w-4 h-4" />
+                        Import Workspace
+                      </button>
+                      <input
+                        ref={importInputRef}
+                        type="file"
+                        accept="application/json,.json"
+                        className="hidden"
+                        onChange={(event) => {
+                          const file = event.target.files?.[0];
+                          if (file) void onImport(file);
+                          event.target.value = '';
+                        }}
+                      />
+                    </div>
                     <button 
                       onClick={() => {
                         onReset();

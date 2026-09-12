@@ -79,6 +79,23 @@ test('clears search filters without reloading the app', async ({ page, isMobile 
   await expect(page.locator('h3', { hasText: 'JSON Prettify' })).toBeVisible();
 });
 
+test('exports and imports a workspace backup', async ({ page }) => {
+  await page.getByTitle('Settings').click();
+
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export Workspace' }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe('devtoolkit-workspace.json');
+
+  page.on('dialog', dialog => void dialog.accept());
+  await page.locator('input[type="file"]').setInputFiles({
+    name: 'workspace.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify({ favorites: ['json-prettify'], recentTools: ['json-prettify'], theme: 'midnight', density: 'compact' }))
+  });
+  await expect(page.locator('aside button').filter({ hasText: 'JSON Prettify' })).toHaveCount(2);
+});
+
 test('has no critical or serious accessibility violations', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /Essential Tools for Modern Developers/ })).toBeVisible();
   const results = await new AxeBuilder({ page }).analyze();

@@ -101,6 +101,49 @@ export default function App() {
     setCurrentPage('tools');
   };
 
+  const exportWorkspace = () => {
+    const backup = {
+      version: 1,
+      favorites: favoriteIds,
+      recentTools: recentToolIds,
+      theme,
+      density
+    };
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'devtoolkit-workspace.json';
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importWorkspace = async (file: File) => {
+    try {
+      const backup = JSON.parse(await file.text()) as {
+        favorites?: unknown;
+        recentTools?: unknown;
+        theme?: unknown;
+        density?: unknown;
+      };
+      const validIds = new Set(TOOLS.map(tool => tool.id));
+      const importedFavorites = Array.isArray(backup.favorites)
+        ? backup.favorites.filter((id): id is string => typeof id === 'string' && validIds.has(id))
+        : [];
+      const importedRecentTools = Array.isArray(backup.recentTools)
+        ? backup.recentTools.filter((id): id is string => typeof id === 'string' && validIds.has(id)).slice(0, 8)
+        : [];
+
+      setFavoriteIds(importedFavorites);
+      setRecentToolIds(importedRecentTools);
+      if (backup.theme === 'dark' || backup.theme === 'midnight' || backup.theme === 'carbon') setTheme(backup.theme);
+      if (backup.density === 'relaxed' || backup.density === 'compact') setDensity(backup.density);
+      alert('Workspace imported successfully.');
+    } catch {
+      alert('This workspace file is invalid.');
+    }
+  };
+
   const themeClasses = {
     dark: 'bg-slate-950 text-slate-200',
     midnight: 'bg-[#0a0c10] text-slate-300',
@@ -376,6 +419,8 @@ export default function App() {
         density={density}
         setDensity={setDensity}
         onReset={resetPreferences}
+        onExport={exportWorkspace}
+        onImport={importWorkspace}
       />
     </div>
   );

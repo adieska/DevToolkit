@@ -18,6 +18,7 @@
   - Favorites view filters the library to starred tools.
   - Recently used tools available from the sidebar.
   - Theme, density, favorites, and recent tools persist across reloads.
+  - Workspace settings can be exported to or imported from a local JSON backup.
   - Clear Local Data resets the workspace to factory defaults.
 - **Smart Search**: Find tools instantly with keyboard-friendly navigation.
 - **Filter Reset**: Clear search, category, and Favorites filters without reloading the app.
