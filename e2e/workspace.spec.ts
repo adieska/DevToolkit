@@ -53,3 +53,30 @@ test('has no critical or serious accessibility violations', async ({ page }) => 
 
   expect(blockingViolations).toEqual([]);
 });
+
+test('loads the app offline after the PWA service worker is ready', async ({ page }) => {
+  await expect(page.getByRole('heading', { name: /Essential Tools for Modern Developers/ })).toBeVisible();
+  await page.evaluate(async () => {
+    const registration = await navigator.serviceWorker.register('/sw.js');
+    await new Promise<void>((resolve, reject) => {
+      if (registration.active) {
+        resolve();
+        return;
+      }
+      registration.addEventListener('updatefound', () => {
+        const worker = registration.installing;
+        worker?.addEventListener('statechange', () => {
+          if (worker.state === 'activated') resolve();
+          if (worker.state === 'redundant') reject(new Error('Service worker became redundant'));
+        });
+      });
+    });
+  });
+  await page.reload();
+
+  await page.context().setOffline(true);
+  await page.reload();
+
+  await expect(page).toHaveTitle('DevToolKit | Essential Developer Tools');
+  await expect(page.getByRole('heading', { name: /Essential Tools for Modern Developers/ })).toBeVisible();
+});

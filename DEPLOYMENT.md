@@ -5,10 +5,11 @@ DevToolKit is built with **React**, **Vite**, and **Tailwind CSS**. Because it i
 ## 1. Prepare the Build
 First, generate the production-ready files:
 ```bash
-npm install
+npm ci
 npm run build
 ```
 This will create a `dist/` folder containing all the optimized assets (HTML, CSS, JS).
+The build also generates the PWA manifest and service worker used for offline asset caching.
 
 ---
 
