@@ -19,6 +19,7 @@
 - **Smart Search**: Find tools instantly with keyboard-friendly navigation.
 - **Real-time Feedback**: Live preview for QR codes, JWT decoding, and math calculations.
 - **Optimized Loading**: Tool categories and secondary pages are loaded on demand to keep the initial bundle fast.
+- **Offline Ready**: Installable as a PWA with cached application assets and automatic service worker updates.
 
 ## 🚀 Getting Started
 
