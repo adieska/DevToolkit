@@ -63,7 +63,10 @@ test('focuses search with keyboard shortcuts', async ({ page }) => {
 test('opens search from the mobile header', async ({ page, isMobile }) => {
   test.skip(!isMobile, 'Mobile header search is only rendered on mobile layouts');
   await page.getByRole('button', { name: 'Open search' }).click();
-  await expect(page.getByRole('textbox', { name: 'Search developer tools' })).toBeFocused();
+  const search = page.getByRole('textbox', { name: 'Search developer tools' });
+  await expect(search).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(search).toBeHidden();
 });
 
 test('clears search filters without reloading the app', async ({ page, isMobile }) => {
@@ -94,6 +97,13 @@ test('exports and imports a workspace backup', async ({ page }) => {
     buffer: Buffer.from(JSON.stringify({ favorites: ['json-prettify'], recentTools: ['json-prettify'], theme: 'midnight', density: 'compact' }))
   });
   await expect(page.locator('aside button').filter({ hasText: 'JSON Prettify' })).toHaveCount(2);
+});
+
+test('closes Settings with Escape', async ({ page }) => {
+  await page.getByTitle('Settings').click();
+  await expect(page.getByRole('heading', { name: 'PREFERENCES' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('heading', { name: 'PREFERENCES' })).toBeHidden();
 });
 
 test('has no critical or serious accessibility violations', async ({ page }) => {

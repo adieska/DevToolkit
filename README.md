@@ -23,6 +23,7 @@
 - **Smart Search**: Find tools instantly with keyboard-friendly navigation.
 - **Filter Reset**: Clear search, category, and Favorites filters without reloading the app.
 - **Keyboard Workflow**: Press `Ctrl/Cmd+K` or `/` to focus search instantly; mobile users can open search from the header.
+- Press `Escape` to close open search or Settings panels.
 - **Real-time Feedback**: Live preview for QR codes, JWT decoding, and math calculations.
 - **Optimized Loading**: Tool categories and secondary pages are loaded on demand to keep the initial bundle fast.
 - **Offline Ready**: Installable as a PWA with cached application assets and automatic service worker updates.

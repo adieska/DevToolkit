@@ -60,6 +60,12 @@ export default function App() {
       const isSearchShortcut = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k';
       const isSlashShortcut = event.key === '/' && !isTyping;
 
+      if (event.key === 'Escape') {
+        if (isMobileSearchOpen) setIsMobileSearchOpen(false);
+        if (isSettingsOpen) setIsSettingsOpen(false);
+        return;
+      }
+
       if (isSearchShortcut || isSlashShortcut) {
         event.preventDefault();
         const isMobile = window.matchMedia('(max-width: 767px)').matches;
@@ -74,7 +80,7 @@ export default function App() {
 
     window.addEventListener('keydown', handleShortcut);
     return () => window.removeEventListener('keydown', handleShortcut);
-  }, []);
+  }, [isMobileSearchOpen, isSettingsOpen]);
 
   const openTool = (tool: Tool) => {
     setSelectedTool(tool);
