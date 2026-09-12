@@ -18,6 +18,7 @@
   - Clear Local Data resets the workspace to factory defaults.
 - **Smart Search**: Find tools instantly with keyboard-friendly navigation.
 - **Real-time Feedback**: Live preview for QR codes, JWT decoding, and math calculations.
+- **Optimized Loading**: Tool categories and secondary pages are loaded on demand to keep the initial bundle fast.
 
 ## 🚀 Getting Started
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { 
   Search, 
   Menu, 
@@ -18,19 +18,19 @@ import { motion, AnimatePresence } from 'motion/react';
 import { TOOLS, CATEGORIES, Tool, ToolCategory } from './types';
 
 // Components
-import Formatter from './components/Formatter';
-import Encoder from './components/Encoder';
-import Converter from './components/Converter';
-import CryptoTool from './components/CryptoTool';
-import TextTool from './components/TextTool';
-import GeneratorTool from './components/GeneratorTool';
-import NetworkingTool from './components/NetworkingTool';
-import TimeTool from './components/TimeTool';
-import DataTool from './components/DataTool';
-import ImageTool from './components/ImageTool';
-import MathTool from './components/MathTool';
-import Blog from './components/Blog';
-import Settings from './components/Settings';
+const Formatter = lazy(() => import('./components/Formatter'));
+const Encoder = lazy(() => import('./components/Encoder'));
+const Converter = lazy(() => import('./components/Converter'));
+const CryptoTool = lazy(() => import('./components/CryptoTool'));
+const TextTool = lazy(() => import('./components/TextTool'));
+const GeneratorTool = lazy(() => import('./components/GeneratorTool'));
+const NetworkingTool = lazy(() => import('./components/NetworkingTool'));
+const TimeTool = lazy(() => import('./components/TimeTool'));
+const DataTool = lazy(() => import('./components/DataTool'));
+const ImageTool = lazy(() => import('./components/ImageTool'));
+const MathTool = lazy(() => import('./components/MathTool'));
+const Blog = lazy(() => import('./components/Blog'));
+const Settings = lazy(() => import('./components/Settings'));
 
 const STORAGE_KEYS = {
   favorites: 'devtoolkit:favorites',
@@ -291,7 +291,9 @@ export default function App() {
               transition={{ duration: 0.3, ease: "easeOut" }}
               className="h-full"
             >
-              {renderContent()}
+              <Suspense fallback={<div className="flex min-h-[50vh] items-center justify-center text-sm text-slate-500">Loading tool...</div>}>
+                {renderContent()}
+              </Suspense>
             </motion.div>
           </AnimatePresence>
         </div>
