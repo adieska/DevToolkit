@@ -11,6 +11,11 @@
 - **Professional Workstation UI**:
   - **Theming**: Deep Slate, Midnight Indigo, and Carbon Black.
   - **Layout Density**: Relaxed and Compact modes for different screen sizes.
+- **Personal Workspace**:
+  - Favorite tools saved locally in the browser.
+  - Recently used tools available from the sidebar.
+  - Theme, density, favorites, and recent tools persist across reloads.
+  - Clear Local Data resets the workspace to factory defaults.
 - **Smart Search**: Find tools instantly with keyboard-friendly navigation.
 - **Real-time Feedback**: Live preview for QR codes, JWT decoding, and math calculations.
 
@@ -40,7 +45,7 @@ The app will be available at `http://localhost:3000`.
 
 ## 🛠️ Built With
 
-- **React 18** - UI Logic
+- **React 19** - UI Logic
 - **Vite** - Build System
 - **Tailwind CSS** - Styling
 - **Lucide React** - Iconography
