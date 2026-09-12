@@ -52,7 +52,7 @@ npm run lint
 npm run build
 ```
 
-The test suite covers workspace persistence helpers, favorite tools, recent tool history, lazy-loaded tools, and the main browser workflow.
+The test suite covers workspace persistence helpers, favorite tools, recent tool history, lazy-loaded tools, the main browser workflow, and a mobile viewport smoke test.
 
 ## 🛠️ Built With
 

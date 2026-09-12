@@ -1,9 +1,13 @@
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    if (!sessionStorage.getItem('__devtoolkit_e2e_initialized')) {
+      localStorage.clear();
+      sessionStorage.setItem('__devtoolkit_e2e_initialized', 'true');
+    }
+  });
   await page.goto('/');
-  await page.evaluate(() => localStorage.clear());
-  await page.reload();
 });
 
 test('opens the branded app and lazy-loads a tool', async ({ page }) => {
@@ -29,4 +33,12 @@ test('persists favorites and recent tools, then resets them', async ({ page }) =
   await page.getByRole('button', { name: 'Clear Local Data' }).click();
   await expect(page.getByText('No favorites yet')).toBeVisible();
   await expect(page.getByText('No recent tools')).toBeVisible();
+});
+
+test('renders the main workflow on a mobile viewport', async ({ page }) => {
+  await expect(page.getByRole('button', { name: 'Explore Library' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Essential Tools for Modern Developers/ })).toBeVisible();
+
+  await page.locator('h3', { hasText: 'JSON Prettify' }).click();
+  await expect(page.getByRole('heading', { name: 'JSON Prettify' })).toBeVisible();
 });
