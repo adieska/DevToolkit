@@ -19,7 +19,7 @@
   - Theme, density, favorites, and recent tools persist across reloads.
   - Clear Local Data resets the workspace to factory defaults.
 - **Smart Search**: Find tools instantly with keyboard-friendly navigation.
-- **Keyboard Workflow**: Press `Ctrl/Cmd+K` or `/` to focus search instantly.
+- **Keyboard Workflow**: Press `Ctrl/Cmd+K` or `/` to focus search instantly; mobile users can open search from the header.
 - **Real-time Feedback**: Live preview for QR codes, JWT decoding, and math calculations.
 - **Optimized Loading**: Tool categories and secondary pages are loaded on demand to keep the initial bundle fast.
 - **Offline Ready**: Installable as a PWA with cached application assets and automatic service worker updates.

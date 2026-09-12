@@ -44,10 +44,9 @@ test('renders the main workflow on a mobile viewport', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'JSON Prettify' })).toBeVisible();
 });
 
-test('focuses search with keyboard shortcuts', async ({ page, isMobile }) => {
-  test.skip(isMobile, 'Search input is intentionally hidden on mobile layouts');
+test('focuses search with keyboard shortcuts', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /Essential Tools for Modern Developers/ })).toBeVisible();
-  const search = page.getByRole('textbox', { name: 'Search developer tools' });
+  const search = page.getByRole('textbox', { name: 'Search developer tools' }).last();
 
   await page.keyboard.press('Control+k');
   await expect(search).toBeFocused();
@@ -55,6 +54,12 @@ test('focuses search with keyboard shortcuts', async ({ page, isMobile }) => {
   await page.keyboard.press('Escape');
   await page.keyboard.press('/');
   await expect(search).toBeFocused();
+});
+
+test('opens search from the mobile header', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'Mobile header search is only rendered on mobile layouts');
+  await page.getByRole('button', { name: 'Open search' }).click();
+  await expect(page.getByRole('textbox', { name: 'Search developer tools' })).toBeFocused();
 });
 
 test('has no critical or serious accessibility violations', async ({ page }) => {

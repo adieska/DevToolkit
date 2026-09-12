@@ -38,6 +38,7 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState<'tools' | 'blog'>('tools');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<ToolCategory | 'All'>('All');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [theme, setTheme] = useState<'dark' | 'midnight' | 'carbon'>(() => readStored(STORAGE_KEYS.theme, 'dark', localStorage));
@@ -45,6 +46,7 @@ export default function App() {
   const [favoriteIds, setFavoriteIds] = useState<string[]>(() => readStored(STORAGE_KEYS.favorites, [], localStorage));
   const [recentToolIds, setRecentToolIds] = useState<string[]>(() => readStored(STORAGE_KEYS.recentTools, [], localStorage));
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const mobileSearchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.theme, JSON.stringify(theme)); }, [theme]);
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.density, JSON.stringify(density)); }, [density]);
@@ -59,7 +61,13 @@ export default function App() {
 
       if (isSearchShortcut || isSlashShortcut) {
         event.preventDefault();
-        searchInputRef.current?.focus();
+        const isMobile = window.matchMedia('(max-width: 767px)').matches;
+        if (isMobile) {
+          setIsMobileSearchOpen(true);
+          window.setTimeout(() => mobileSearchInputRef.current?.focus(), 0);
+        } else {
+          searchInputRef.current?.focus();
+        }
       }
     };
 
@@ -250,6 +258,17 @@ export default function App() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
+            <button
+              aria-label="Open search"
+              title="Open search"
+              onClick={() => {
+                setIsMobileSearchOpen(true);
+                window.setTimeout(() => mobileSearchInputRef.current?.focus(), 0);
+              }}
+              className="p-2.5 hover:bg-slate-900 rounded-xl text-slate-400 transition-colors md:hidden"
+            >
+              <Search className="w-5 h-5" />
+            </button>
           </div>
 
           <div className="flex items-center gap-3">
@@ -282,6 +301,23 @@ export default function App() {
             </button>
           </div>
         </header>
+
+        {isMobileSearchOpen && (
+          <div className="absolute left-0 right-0 top-20 z-30 border-b border-slate-800 bg-slate-950/95 p-4 backdrop-blur-md md:hidden">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <input
+                ref={mobileSearchInputRef}
+                type="text"
+                aria-label="Search developer tools"
+                placeholder="Search essential developer tools..."
+                className="w-full bg-slate-900 border border-slate-800 text-slate-300 rounded-2xl py-2.5 pl-12 pr-4 text-sm focus:bg-slate-900/50 focus:ring-2 focus:ring-indigo-500 transition-all outline-none"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Content Area */}
         <div className={`flex-1 overflow-y-auto p-6 md:p-10 transition-colors duration-300 ${theme === 'midnight' ? 'bg-[#0a0c10]' : theme === 'carbon' ? 'bg-black' : 'bg-slate-950'}`}>
