@@ -15,6 +15,7 @@
   - **Layout Density**: Relaxed and Compact modes for different screen sizes.
 - **Personal Workspace**:
   - Favorite tools saved locally in the browser.
+  - Favorites view filters the library to starred tools.
   - Recently used tools available from the sidebar.
   - Theme, density, favorites, and recent tools persist across reloads.
   - Clear Local Data resets the workspace to factory defaults.

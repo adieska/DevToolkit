@@ -40,6 +40,7 @@ export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<ToolCategory | 'All'>('All');
+  const [showFavorites, setShowFavorites] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [theme, setTheme] = useState<'dark' | 'midnight' | 'carbon'>(() => readStored(STORAGE_KEYS.theme, 'dark', localStorage));
   const [density, setDensity] = useState<'relaxed' | 'compact'>(() => readStored(STORAGE_KEYS.density, 'relaxed', localStorage));
@@ -104,10 +105,13 @@ export default function App() {
     const matchesCategory = activeCategory === 'All' || tool.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
+  const visibleTools = showFavorites
+    ? filteredTools.filter(tool => favoriteIds.includes(tool.id))
+    : filteredTools;
 
   const renderContent = () => {
     if (currentPage === 'blog') return <Blog />;
-    if (!selectedTool) return <HomeDashboard tools={filteredTools} activeCategory={activeCategory} onSelect={openTool} searchQuery={searchQuery} onNavigate={setCurrentPage} favoriteIds={favoriteIds} onToggleFavorite={toggleFavorite} />;
+    if (!selectedTool) return <HomeDashboard tools={visibleTools} activeCategory={activeCategory} showFavorites={showFavorites} onSelect={openTool} searchQuery={searchQuery} onNavigate={setCurrentPage} favoriteIds={favoriteIds} onToggleFavorite={toggleFavorite} />;
 
     const category = selectedTool.category;
     if (category === 'Formatters') return <Formatter {...selectedTool} />;
@@ -155,7 +159,7 @@ export default function App() {
               <div className="space-y-1">
                 <h2 className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Navigation</h2>
                 <button 
-                  onClick={() => { setCurrentPage('tools'); setActiveCategory('All'); setSelectedTool(null); }}
+                  onClick={() => { setCurrentPage('tools'); setActiveCategory('All'); setShowFavorites(false); setSelectedTool(null); }}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${currentPage === 'tools' && activeCategory === 'All' && !selectedTool ? 'bg-slate-900 text-indigo-400 border border-slate-800' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'}`}
                 >
                   <LayoutGrid className="w-4 h-4" />
@@ -175,7 +179,7 @@ export default function App() {
                 {CATEGORIES.map(cat => (
                   <button 
                     key={cat}
-                    onClick={() => { setCurrentPage('tools'); setActiveCategory(cat); setSelectedTool(null); }}
+                    onClick={() => { setCurrentPage('tools'); setActiveCategory(cat); setShowFavorites(false); setSelectedTool(null); }}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group ${currentPage === 'tools' && activeCategory === cat && !selectedTool ? 'bg-slate-900 text-indigo-400 border border-slate-800' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'}`}
                   >
                    <ChevronRight className={`w-3 h-3 transition-transform ${currentPage === 'tools' && activeCategory === cat ? 'rotate-90 text-indigo-500' : 'text-slate-600 group-hover:text-slate-400'}`} />
@@ -288,6 +292,7 @@ export default function App() {
                 setCurrentPage('tools');
                 setSelectedTool(null);
                 setActiveCategory('All');
+                setShowFavorites(true);
               }}
             >
               <Star className="w-4 h-4" />
@@ -323,7 +328,7 @@ export default function App() {
         <div className={`flex-1 overflow-y-auto p-6 md:p-10 transition-colors duration-300 ${theme === 'midnight' ? 'bg-[#0a0c10]' : theme === 'carbon' ? 'bg-black' : 'bg-slate-950'}`}>
           <AnimatePresence mode="wait">
             <motion.div
-              key={selectedTool?.id || activeCategory}
+              key={selectedTool?.id || `${activeCategory}-${showFavorites}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -368,7 +373,7 @@ export default function App() {
   );
 }
 
-function HomeDashboard({ tools, activeCategory, onSelect, searchQuery, onNavigate, favoriteIds, onToggleFavorite }: { tools: Tool[], activeCategory: string, onSelect: (tool: Tool) => void, searchQuery: string, onNavigate: (page: 'tools' | 'blog') => void, favoriteIds: string[], onToggleFavorite: (toolId: string) => void }) {
+function HomeDashboard({ tools, activeCategory, showFavorites, onSelect, searchQuery, onNavigate, favoriteIds, onToggleFavorite }: { tools: Tool[], activeCategory: string, showFavorites: boolean, onSelect: (tool: Tool) => void, searchQuery: string, onNavigate: (page: 'tools' | 'blog') => void, favoriteIds: string[], onToggleFavorite: (toolId: string) => void }) {
   return (
     <div className="max-w-7xl mx-auto space-y-10 text-left">
       {/* Hero Section */}
@@ -408,7 +413,7 @@ function HomeDashboard({ tools, activeCategory, onSelect, searchQuery, onNavigat
         <div className="flex items-center justify-between px-2">
           <h2 className="text-2xl font-bold text-white flex items-center gap-3">
              <div className="w-2 h-8 bg-indigo-500 rounded-full"></div>
-             {activeCategory === 'All' ? 'Latest Discoveries' : activeCategory}
+             {showFavorites ? 'Favorite Tools' : activeCategory === 'All' ? 'Latest Discoveries' : activeCategory}
           </h2>
           <p className="text-sm font-medium text-slate-400">{tools.length} Tools Available</p>
         </div>
@@ -453,8 +458,8 @@ function HomeDashboard({ tools, activeCategory, onSelect, searchQuery, onNavigat
               <div className="bg-slate-900 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <Search className="w-10 h-10 text-slate-700" />
               </div>
-              <h3 className="text-xl font-bold text-slate-400">No tools found matching "{searchQuery}"</h3>
-              <p className="text-slate-600 text-sm mt-2">Try adjusting your search or category filters</p>
+              <h3 className="text-xl font-bold text-slate-400">{showFavorites ? 'No favorite tools yet' : `No tools found matching "${searchQuery}"`}</h3>
+              <p className="text-slate-600 text-sm mt-2">{showFavorites ? 'Star a tool to keep it close at hand.' : 'Try adjusting your search or category filters'}</p>
               <button onClick={() => window.location.reload()} className="text-indigo-400 font-bold mt-6 hover:underline text-sm uppercase tracking-widest">Clear all filters</button>
             </div>
           )}

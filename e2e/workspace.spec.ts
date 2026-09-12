@@ -24,6 +24,10 @@ test('persists favorites and recent tools, then resets them', async ({ page }) =
   await page.getByTitle('Add to favorites').first().click();
   await expect(page.locator('aside button').filter({ hasText: 'JSON Prettify' })).toBeVisible();
 
+  await page.getByRole('button', { name: 'Favorites', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Favorite Tools' })).toBeVisible();
+  await expect(page.locator('h3', { hasText: 'JSON Prettify' })).toBeVisible();
+
   await page.locator('h3', { hasText: 'JSON Prettify' }).click();
   await expect(page.locator('aside button').filter({ hasText: 'JSON Prettify' })).toHaveCount(2);
 
