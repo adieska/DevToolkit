@@ -93,6 +93,14 @@ export default function App() {
     setRecentToolIds([]);
   };
 
+  const clearFilters = () => {
+    setSearchQuery('');
+    setActiveCategory('All');
+    setShowFavorites(false);
+    setSelectedTool(null);
+    setCurrentPage('tools');
+  };
+
   const themeClasses = {
     dark: 'bg-slate-950 text-slate-200',
     midnight: 'bg-[#0a0c10] text-slate-300',
@@ -111,7 +119,7 @@ export default function App() {
 
   const renderContent = () => {
     if (currentPage === 'blog') return <Blog />;
-    if (!selectedTool) return <HomeDashboard tools={visibleTools} activeCategory={activeCategory} showFavorites={showFavorites} onSelect={openTool} searchQuery={searchQuery} onNavigate={setCurrentPage} favoriteIds={favoriteIds} onToggleFavorite={toggleFavorite} />;
+    if (!selectedTool) return <HomeDashboard tools={visibleTools} activeCategory={activeCategory} showFavorites={showFavorites} onSelect={openTool} searchQuery={searchQuery} onNavigate={setCurrentPage} onClearFilters={clearFilters} favoriteIds={favoriteIds} onToggleFavorite={toggleFavorite} />;
 
     const category = selectedTool.category;
     if (category === 'Formatters') return <Formatter {...selectedTool} />;
@@ -373,7 +381,7 @@ export default function App() {
   );
 }
 
-function HomeDashboard({ tools, activeCategory, showFavorites, onSelect, searchQuery, onNavigate, favoriteIds, onToggleFavorite }: { tools: Tool[], activeCategory: string, showFavorites: boolean, onSelect: (tool: Tool) => void, searchQuery: string, onNavigate: (page: 'tools' | 'blog') => void, favoriteIds: string[], onToggleFavorite: (toolId: string) => void }) {
+function HomeDashboard({ tools, activeCategory, showFavorites, onSelect, searchQuery, onNavigate, onClearFilters, favoriteIds, onToggleFavorite }: { tools: Tool[], activeCategory: string, showFavorites: boolean, onSelect: (tool: Tool) => void, searchQuery: string, onNavigate: (page: 'tools' | 'blog') => void, onClearFilters: () => void, favoriteIds: string[], onToggleFavorite: (toolId: string) => void }) {
   return (
     <div className="max-w-7xl mx-auto space-y-10 text-left">
       {/* Hero Section */}
@@ -460,7 +468,7 @@ function HomeDashboard({ tools, activeCategory, showFavorites, onSelect, searchQ
               </div>
               <h3 className="text-xl font-bold text-slate-400">{showFavorites ? 'No favorite tools yet' : `No tools found matching "${searchQuery}"`}</h3>
               <p className="text-slate-600 text-sm mt-2">{showFavorites ? 'Star a tool to keep it close at hand.' : 'Try adjusting your search or category filters'}</p>
-              <button onClick={() => window.location.reload()} className="text-indigo-400 font-bold mt-6 hover:underline text-sm uppercase tracking-widest">Clear all filters</button>
+              <button onClick={onClearFilters} className="text-indigo-400 font-bold mt-6 hover:underline text-sm uppercase tracking-widest">Clear all filters</button>
             </div>
           )}
         </div>

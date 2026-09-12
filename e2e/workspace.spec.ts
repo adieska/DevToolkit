@@ -66,6 +66,19 @@ test('opens search from the mobile header', async ({ page, isMobile }) => {
   await expect(page.getByRole('textbox', { name: 'Search developer tools' })).toBeFocused();
 });
 
+test('clears search filters without reloading the app', async ({ page, isMobile }) => {
+  if (isMobile) {
+    await page.getByRole('button', { name: 'Open search' }).click();
+  }
+  const search = page.getByRole('textbox', { name: 'Search developer tools' }).last();
+  await search.fill('no-tool-matches-this-query');
+  await expect(page.getByText(/No tools found matching/)).toBeVisible();
+
+  await page.getByRole('button', { name: 'Clear all filters' }).click();
+  await expect(page.getByRole('heading', { name: 'Latest Discoveries' })).toBeVisible();
+  await expect(page.locator('h3', { hasText: 'JSON Prettify' })).toBeVisible();
+});
+
 test('has no critical or serious accessibility violations', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /Essential Tools for Modern Developers/ })).toBeVisible();
   const results = await new AxeBuilder({ page }).analyze();
