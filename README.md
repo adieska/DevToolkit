@@ -47,11 +47,12 @@ The app will be available at `http://localhost:3000`.
 ### Testing
 ```bash
 npm test
+npm run test:e2e
 npm run lint
 npm run build
 ```
 
-The test suite covers workspace persistence helpers, favorite tools, and recent tool history.
+The test suite covers workspace persistence helpers, favorite tools, recent tool history, lazy-loaded tools, and the main browser workflow.
 
 ## 🛠️ Built With
 
